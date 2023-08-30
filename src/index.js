@@ -2,15 +2,34 @@
 
 const express = require("express");
 const app = express();
-const { PORT } = require("./constants");
+const { PORT, CLIENT_URL } = require("./constants");
+const cookieParser = require("cookie-parser");
+const passport = require("passport");
+//we use this to communicate with client
+const cors = require("cors");
+
+//import passport middleware
+require("./middlewares/passport-middleware");
+
+//initialize middlewares allow node.js to send and get json
+app.use(express.json());
+app.use(cookieParser());
+app.use(cors({ origin: CLIENT_URL, credentials: true }));
+app.use(passport.initialize());
+
+//import routes
+const authRoutes = require("./routes/auth");
+
+//initialize
+app.use("/api", authRoutes);
 
 const appStart = () => {
   try {
     app.listen(PORT, () => {
-      console.log("The app is running at http://localhost:${PORT}");
+      console.log(`The app is running at http://localhost:${PORT}`);
     });
   } catch (error) {
-    console.log("Error: ${error.message}");
+    console.log(`Error: ${error.message}`);
   }
 };
 
