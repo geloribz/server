@@ -63,6 +63,7 @@ exports.login = async (req, res) => {
   }
 };
 
+//can be modified to return protected information specific to the payload value within the token
 exports.protected = async (req, res) => {
   try {
     return res.status(200).json({
